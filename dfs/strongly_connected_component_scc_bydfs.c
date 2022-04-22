@@ -57,15 +57,80 @@ void dfs(int v)
 {
     int i;
     d_time[v]=++time;
-    printf("%d ",v);
+    // printf("%d ",v);
     state[v]=visited;
     for(i=0;i<n;i++)
     {
-        if(state[i]==initial&&adj[v][i]==1)
+        if(state[i]==initial && adj[v][i]==1)
             dfs(i);
     }
     state[v]=finished;
     f_time[v]=++time;
+    // printf("\n");
+}
+int ver_with_max_ftime()
+{
+    int max_time=-1,i,v=-1;
+    for(i=0;i<n;i++)
+    {
+        if(state[i]==initial)
+        {
+            max_time=f_time[i];
+            v=i;
+            break;
+        }
+    }
+    for(i=0;i<n;i++)
+    {
+        if(state[i]==initial)
+        {
+            if(f_time[i]>max_time)
+            {
+                max_time=f_time[i];
+                v=i;
+            }
+            
+        }
+    }    
+    return v;   
+}
+void dfs2(int v)
+{
+    int i;
+    //d_time[v]=++time;
+    printf("%d ",v);
+    state[v]=visited;
+    for(i=0;i<n;i++)
+    {
+        if(state[i]==initial&&adjr[v][i]==1)
+            dfs2(i);
+    }
+    state[v]=finished;
+   // f_time[v]=++time;
+   printf("\n");
+}
+void df_traversal2()
+{
+    int i, count=0;
+
+    int v=ver_with_max_ftime();
+    printf("v is %d ",v);
+    if(v==-1)
+      return;
+    printf("SCC %d is", ++count);
+    dfs2(v);
+
+    for(i=0;i<n;i++)
+    {
+        if(state[i]==initial)
+        {
+            v=ver_with_max_ftime();
+            if(v==-1)
+                return;
+            printf("SCC %d is", ++count);
+            dfs2(v);     
+        }
+    } 
 }
 void df_traversal()
 {
@@ -96,18 +161,8 @@ void df_traversal()
 
     for(i=0;i<n;i++)
       state[i]=initial;
-    printf("enter any vertex to start traversal\n");
-    scanf("%d",&v);  
-    dfs(v);  
-    for(i=0;i<n;i++)
-    {
-        if(state[i]==initial)
-        {
-             printf("graph is not strongly connected\n");
-            exit(1);
-        }
-    }   
-    printf("graph is strongly connected\n"); 
+
+    df_traversal2();
 }
 int main()
 {
